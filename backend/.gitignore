@@ -1,0 +1,24 @@
+# File Konfigurasi Sensitif (WAJIB)
+.env
+
+# Binary hasil build (agar tidak mengotori repo)
+main
+main.exe
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Folder dependensi (tidak perlu di-push karena ada go.mod)
+vendor/
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker logs
+*.log
+docker-compose.override.yml
