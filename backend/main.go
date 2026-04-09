@@ -3,6 +3,7 @@
 	import (
 		"backend/config"
 		"backend/controllers" 
+		"backend/middleware"
 		"net/http"
 		"os"
 
@@ -45,17 +46,19 @@
 			})
 		})
 
-		// Rute Publik (Siapa saja bisa lapor & lihat)
-		r.GET("/reports", func(c *gin.Context) {
-			controllers.GetReports(c, config.DB)
-		})
-		r.POST("/reports", func(c *gin.Context) {
-			controllers.CreateReport(c, config.DB)
-		})
+	// Rute Publik
+		r.GET("/reports", controllers.GetReports)
+		r.POST("/reports", controllers.CreateReport)
+		r.POST("/register", controllers.Register)
+		r.POST("/login", controllers.Login)
 
-		// Rute Admin (Nanti kita tambah middleware JWT di sini)
-		// r.PATCH("/reports/:id", controllers.UpdateStatus) 
-
+		// Rute Terproteksi (Hanya yang sudah login bisa akses)
+		protected := r.Group("/admin")
+		protected.Use(middleware.AuthMiddleware())
+		{
+			// Fitur ke-3: Update Status Sampah
+			protected.PATCH("/reports/:id", controllers.UpdateReportStatus)
+		}
 		// 4. Jalankan Server
 		port := os.Getenv("PORT")
 		if port == "" {

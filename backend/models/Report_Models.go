@@ -10,6 +10,7 @@ type Report struct {
 	ID string `gorm:"type:varchar(10);primaryKey" json:"id"`
 	Description string `gorm:"type:text;not null" json:"description"`
 	ImageURL string `gorm:"type:varchar(255)" json:"image_url,omitempty"`
+	Location string `gorm:"type:varchar(255)" json:"location,omitempty"`
 	Status string `gorm:"type:enum('pending', 'in_progress', 'resolved');default:'pending'" json:"status"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
