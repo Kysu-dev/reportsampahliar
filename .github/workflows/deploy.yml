@@ -23,6 +23,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./frontend # Pastikan ini folder frontend di project kamu
+          file: ./frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/fe-reportsampah:latest
 
