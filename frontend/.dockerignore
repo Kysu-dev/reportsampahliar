@@ -1,0 +1,24 @@
+# dependencies
+node_modules
+
+# build outputs
+.next
+out
+coverage
+
+# local env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vcs and editor
+.git
+.vscode
+.idea
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
