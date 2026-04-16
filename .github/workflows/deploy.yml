@@ -74,3 +74,20 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/be-reportsampah:latest
+
+  # --- JOB 4: DEPLOY KE EC2 BACKEND ---
+  deploy-backend:
+    needs: build-backend
+    runs-on: self-hosted-backend # Sesuaikan dengan label yang kamu buat tadi
+    steps:
+      - name: Pull and Run Backend
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/be-reportsampah:latest
+          docker stop be-app || true
+          docker rm be-app || true
+          docker run -d \
+            --name be-app \
+            -p 8080:8080 \
+            --env-file .env \
+            ${{ secrets.DOCKER_USERNAME }}/be-reportsampah:latest
+          docker image prune -f
