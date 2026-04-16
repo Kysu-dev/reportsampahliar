@@ -1,5 +1,7 @@
 # File Konfigurasi Sensitif (WAJIB)
 .env
+.env.*
+!.env.example
 
 # Binary hasil build (agar tidak mengotori repo)
 main
