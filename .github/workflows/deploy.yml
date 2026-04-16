@@ -25,7 +25,7 @@ jobs:
           context: ./frontend # Pastikan ini folder frontend di project kamu
           file: ./frontend/Dockerfile
           build-args: |
-            NEXT_PUBLIC_API_URL=/api
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/fe-reportsampah:latest
 
@@ -47,7 +47,7 @@ jobs:
           # Jalankan container baru
           docker run -d \
             --name fe-app \
-            -p 3000:80 \
+            -p 80:80 \
             --restart unless-stopped \
             ${{ secrets.DOCKER_USERNAME }}/fe-reportsampah:latest
             

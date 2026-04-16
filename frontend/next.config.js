@@ -1,8 +1,6 @@
-import type { NextConfig } from "next";
-
 const defaultAllowedDevOrigins = ['localhost', '127.0.0.1', '192.168.56.1'];
 
-const normalizeAllowedDevOrigin = (value: string): string | null => {
+const normalizeAllowedDevOrigin = (value) => {
   const trimmed = value.trim();
   if (trimmed.length === 0) {
     return null;
@@ -24,13 +22,16 @@ const normalizeAllowedDevOrigin = (value: string): string | null => {
 const envAllowedDevOrigins = (process.env.NEXT_ALLOWED_DEV_ORIGINS ?? '')
   .split(',')
   .map(normalizeAllowedDevOrigin)
-  .filter((origin): origin is string => origin !== null);
+  .filter((origin) => origin !== null);
 
 const allowedDevOrigins = Array.from(new Set([...defaultAllowedDevOrigins, ...envAllowedDevOrigins]));
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
   allowedDevOrigins,
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'http',
@@ -56,4 +57,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
