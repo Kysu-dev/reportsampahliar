@@ -32,11 +32,6 @@ docker compose up --build
 - Frontend: http://3.238.195.18/
 - Backend API: -
 
-## Konfigurasi Database
-Konfigurasi default saat ini menggunakan database:
-- DB_NAME=reportsampah
-
-Jika ingin mengganti database, sesuaikan variabel environment DB_HOST, DB_PORT, DB_USER, DB_PASS, dan DB_NAME.
 
 ## Akun Dummy
 Akun dummy otomatis dibuat saat backend startup (jika belum ada):
