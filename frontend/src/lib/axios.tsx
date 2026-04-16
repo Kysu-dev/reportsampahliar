@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.trim() ?? '';
+const API_BASE_URL_RAW = process.env.NEXT_PUBLIC_API_URL?.trim() ?? '';
+
+function normalizeApiBaseUrl(baseUrl: string): string {
+  // Hindari double prefix seperti /api/api/reports saat env sudah berisi /api.
+  const withoutTrailingSlash = baseUrl.replace(/\/+$/, '');
+  return withoutTrailingSlash.replace(/\/api$/i, '');
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(API_BASE_URL_RAW);
 
 if (!API_BASE_URL) {
   throw new Error('NEXT_PUBLIC_API_URL is not set. Pass it via Docker build arg.');
