@@ -85,9 +85,12 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/be-reportsampah:latest
           docker stop be-app || true
           docker rm be-app || true
+
+          # Kita arahkan ke file .env yang ada di home directory ubuntu
           docker run -d \
             --name be-app \
             -p 8080:8080 \
-            --env-file .env \
+            --env-file /home/ubuntu/.env \
             ${{ secrets.DOCKER_USERNAME }}/be-reportsampah:latest
+
           docker image prune -f
