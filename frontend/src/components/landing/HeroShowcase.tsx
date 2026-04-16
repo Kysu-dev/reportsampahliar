@@ -9,6 +9,7 @@ import CountUp from '@/components/CountUp';
 interface HeroShowcaseProps {
   totalReports: number;
   activeWorkers: number;
+  recentTrackingIds?: string[];
 }
 
 function toReadableStatus(status?: string) {
@@ -17,7 +18,7 @@ function toReadableStatus(status?: string) {
   return 'Menunggu Verifikasi';
 }
 
-export function HeroShowcase({ totalReports, activeWorkers }: HeroShowcaseProps) {
+export function HeroShowcase({ totalReports, activeWorkers, recentTrackingIds = [] }: HeroShowcaseProps) {
   const [trackingCode, setTrackingCode] = useState('');
   const [isChecking, setIsChecking] = useState(false);
 
@@ -124,6 +125,25 @@ export function HeroShowcase({ totalReports, activeWorkers }: HeroShowcaseProps)
               {isChecking ? 'Mengecek...' : 'Cek Status'}
             </button>
           </form>
+
+          {recentTrackingIds.length > 0 && (
+            <div className='mt-4 space-y-2 rounded-xl border border-emerald-100 bg-emerald-50/60 p-3'>
+              <p className='text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700'>ID Tersimpan di Browser Ini</p>
+              <div className='flex flex-wrap gap-2'>
+                {recentTrackingIds.map((id) => (
+                  <button
+                    key={id}
+                    type='button'
+                    onClick={() => setTrackingCode(id)}
+                    className='rounded-lg border border-emerald-200 bg-white px-3 py-1 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100'
+                  >
+                    {id}
+                  </button>
+                ))}
+              </div>
+              <p className='text-[11px] text-slate-600'>Klik salah satu ID untuk isi otomatis kolom cek status.</p>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -43,6 +43,31 @@ const ReportLocationPickerMap = dynamic(
 
 interface LandingReportFormProps {
   onSuccess?: () => Promise<void> | void;
+  onReportCreated?: (reportId: string) => void;
+}
+
+const RECENT_REPORT_IDS_STORAGE_KEY = 'cleantrack:recent-report-ids';
+const MAX_RECENT_REPORT_IDS = 5;
+
+function saveRecentTrackingId(reportId: string): string[] {
+  const normalizedId = reportId.trim();
+  if (!normalizedId || typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(RECENT_REPORT_IDS_STORAGE_KEY);
+    const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : [];
+    const existingIds = Array.isArray(parsedValue)
+      ? parsedValue.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      : [];
+
+    const nextIds = [normalizedId, ...existingIds.filter((id) => id !== normalizedId)].slice(0, MAX_RECENT_REPORT_IDS);
+    window.localStorage.setItem(RECENT_REPORT_IDS_STORAGE_KEY, JSON.stringify(nextIds));
+    return nextIds;
+  } catch {
+    return [normalizedId];
+  }
 }
 
 function extractSubmitError(error: unknown): { message: string; description?: string } {
@@ -104,7 +129,7 @@ function extractSubmitError(error: unknown): { message: string; description?: st
   return fallback;
 }
 
-export function LandingReportForm({ onSuccess }: LandingReportFormProps) {
+export function LandingReportForm({ onSuccess, onReportCreated }: LandingReportFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
@@ -286,8 +311,21 @@ export function LandingReportForm({ onSuccess }: LandingReportFormProps) {
         formData.append('images', file);
       });
 
-      await reportService.createReport(formData);
-      toast.success('Laporan berhasil dikirim', 'Terima kasih sudah ikut menjaga kebersihan kampus.');
+      const createdReport = await reportService.createReport(formData);
+      const reportId = createdReport.id?.trim() ?? '';
+
+      if (reportId) {
+        saveRecentTrackingId(reportId);
+        onReportCreated?.(reportId);
+      }
+
+      toast.success(
+        'Laporan berhasil dikirim',
+        reportId
+          ? `ID laporan kamu: ${reportId}. Simpan ID ini untuk cek status laporan.`
+          : 'Terima kasih sudah ikut menjaga kebersihan kampus.'
+      );
+
       reset();
       setCoordinates(null);
       setIsManualPinOpen(false);

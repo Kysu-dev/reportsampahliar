@@ -9,9 +9,34 @@ import { Toaster_ } from '@/components/ui/toaster';
 import { reportService } from '@/lib/api';
 import type { Report } from '@/types';
 
+const RECENT_REPORT_IDS_STORAGE_KEY = 'cleantrack:recent-report-ids';
+const MAX_RECENT_REPORT_IDS = 5;
+
+function readRecentTrackingIds(): string[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(RECENT_REPORT_IDS_STORAGE_KEY);
+    const parsedValue: unknown = rawValue ? JSON.parse(rawValue) : [];
+
+    if (!Array.isArray(parsedValue)) {
+      return [];
+    }
+
+    return parsedValue
+      .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      .slice(0, MAX_RECENT_REPORT_IDS);
+  } catch {
+    return [];
+  }
+}
+
 export default function HomePage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoadingReports, setIsLoadingReports] = useState(true);
+  const [recentTrackingIds, setRecentTrackingIds] = useState<string[]>([]);
 
   const loadReports = useCallback(async () => {
     setIsLoadingReports(true);
@@ -28,6 +53,19 @@ export default function HomePage() {
   useEffect(() => {
     loadReports();
   }, [loadReports]);
+
+  useEffect(() => {
+    setRecentTrackingIds(readRecentTrackingIds());
+  }, []);
+
+  const handleReportCreated = useCallback((reportId: string) => {
+    const normalizedId = reportId.trim();
+    if (!normalizedId) {
+      return;
+    }
+
+    setRecentTrackingIds((currentIds) => [normalizedId, ...currentIds.filter((id) => id !== normalizedId)].slice(0, MAX_RECENT_REPORT_IDS));
+  }, []);
 
   const heroStats = useMemo(() => {
     if (reports.length === 0) {
@@ -58,9 +96,10 @@ export default function HomePage() {
                 <HeroShowcase
                   totalReports={heroStats.totalReports}
                   activeWorkers={heroStats.activeWorkers}
+                  recentTrackingIds={recentTrackingIds}
                 />
                 <div className='px-4 pb-10 sm:px-8 sm:pb-12'>
-                  <LandingReportForm onSuccess={loadReports} />
+                  <LandingReportForm onSuccess={loadReports} onReportCreated={handleReportCreated} />
                 </div>
               </div>
 
