@@ -29,8 +29,8 @@ docker compose up --build
 ```
 
 3. Akses aplikasi:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8080
+- Frontend: http://3.238.195.18/
+- Backend API: -
 
 ## Konfigurasi Database
 Konfigurasi default saat ini menggunakan database:
