@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .interactive-lift {
+    transition: transform 280ms ease, box-shadow 280ms ease;
+  }
+
+  .interactive-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 40px -30px rgba(11, 28, 48, 0.45);
+  }
+
+  .animate-rise-in {
+    animation: rise-in 600ms cubic-bezier(0.2, 0.72, 0.18, 1) both;
+  }
+
+  .animate-rise-in-delay-1 {
+    animation: rise-in 700ms cubic-bezier(0.2, 0.72, 0.18, 1) both;
+    animation-delay: 80ms;
+  }
+
+  .animate-rise-in-delay-2 {
+    animation: rise-in 760ms cubic-bezier(0.2, 0.72, 0.18, 1) both;
+    animation-delay: 150ms;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: float-medium 6.5s ease-in-out infinite;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-10px) translateX(6px);
+  }
+
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes float-medium {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+
+  50% {
+    transform: translateY(8px) translateX(-4px);
+  }
+
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-lift,
+  .animate-rise-in,
+  .animate-rise-in-delay-1,
+  .animate-rise-in-delay-2,
+  .animate-float-slow,
+  .animate-float-medium {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+.cleantrack-leaflet-marker .marker-dot {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--marker-color, #059669);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--marker-color, #059669) 26%, transparent),
+    0 10px 24px -14px color-mix(in srgb, var(--marker-color, #059669) 74%, #0f172a 26%);
+}
+
+.leaflet-control-zoom {
+  border: 1px solid #bbf7d0 !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 14px 24px -20px rgba(6, 78, 59, 0.7);
+}
+
+.leaflet-control-zoom a {
+  color: #166534 !important;
+  background: #f0fdf4 !important;
+  border-bottom-color: #bbf7d0 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  border: 1px solid #bbf7d0;
+  box-shadow: 0 24px 38px -28px rgba(6, 78, 59, 0.65);
+}
+
+.leaflet-popup-tip {
+  background: #ffffff;
+  border: 1px solid #bbf7d0;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: #334155;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: #047857;
+}
