@@ -115,13 +115,17 @@ function escapeHtml(value: string): string {
 }
 
 function triggerDownload(content: string, fileName: string, mimeType: string) {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return;
+  }
+
   const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
+  const url = window.URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.download = fileName;
   anchor.click();
-  URL.revokeObjectURL(url);
+  window.URL.revokeObjectURL(url);
 }
 
 export function AdminReportsManagementTable({
@@ -418,6 +422,10 @@ export function AdminReportsManagementTable({
 
   const handleExportPdf = useCallback(() => {
     if (exportRows.length === 0) {
+      return;
+    }
+
+    if (typeof window === 'undefined') {
       return;
     }
 

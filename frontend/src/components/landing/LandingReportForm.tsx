@@ -181,6 +181,11 @@ export function LandingReportForm({ onSuccess }: LandingReportFormProps) {
   };
 
   const handleUseCurrentLocation = async () => {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      toast.error('Fitur lokasi hanya tersedia di browser');
+      return;
+    }
+
     if (!navigator.geolocation) {
       toast.error('Browser kamu tidak mendukung geolokasi');
       return;

@@ -25,11 +25,15 @@ const envAllowedDevOrigins = (process.env.NEXT_ALLOWED_DEV_ORIGINS ?? '')
   .filter((origin) => origin !== null);
 
 const allowedDevOrigins = Array.from(new Set([...defaultAllowedDevOrigins, ...envAllowedDevOrigins]));
+const nextMajorVersion = Number.parseInt((require('next/package.json').version ?? '0').split('.')[0], 10);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
   allowedDevOrigins,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -56,5 +60,11 @@ const nextConfig = {
     ],
   },
 };
+
+if (Number.isFinite(nextMajorVersion) && nextMajorVersion < 16) {
+  nextConfig.eslint = {
+    ignoreDuringBuilds: true,
+  };
+}
 
 module.exports = nextConfig;

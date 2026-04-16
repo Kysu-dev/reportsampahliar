@@ -126,6 +126,10 @@ export function ReportsDataTable({
 
   const handleDeleteReport = useCallback(
     async (reportId: string) => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       const confirmed = window.confirm('Hapus laporan ini? Tindakan ini tidak dapat dibatalkan.');
       if (!confirmed) {
         return;

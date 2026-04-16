@@ -545,6 +545,10 @@ export function AdminControlDashboard() {
 
   const handleDeleteOfficer = useCallback(
     async (officer: Officer) => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       const confirmed = window.confirm(`Hapus akun petugas ${officer.username || officer.email}?`);
       if (!confirmed) {
         return;
