@@ -86,9 +86,18 @@ function extractSubmitError(error: unknown): { message: string; description?: st
   }
 
   if (typeof errorRecord.message === 'string' && errorRecord.message.trim().length > 0) {
+    const normalizedMessage = errorRecord.message.trim();
+
+    if (/network error|failed to fetch|err_network/i.test(normalizedMessage.toLowerCase())) {
+      return {
+        message: 'Gagal mengirim laporan',
+        description: 'Koneksi ke server gagal. Coba refresh halaman, pastikan URL yang dibuka benar, lalu kirim ulang.',
+      };
+    }
+
     return {
       message: 'Gagal mengirim laporan',
-      description: errorRecord.message.trim(),
+      description: normalizedMessage,
     };
   }
 

@@ -8,7 +8,25 @@ function normalizeApiBaseUrl(baseUrl: string): string {
   return withoutTrailingSlash.replace(/\/api$/i, '');
 }
 
-const API_BASE_URL = normalizeApiBaseUrl(API_BASE_URL_RAW);
+function resolveApiBaseUrl(baseUrl: string): string {
+  const normalizedBaseUrl = normalizeApiBaseUrl(baseUrl);
+
+  if (typeof window === 'undefined') {
+    return normalizedBaseUrl;
+  }
+
+  const hostname = window.location.hostname;
+  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+
+  if (isLocalhost) {
+    return normalizedBaseUrl;
+  }
+
+  // Di browser production, pakai same-origin agar selalu lewat proxy Nginx (/api dan /auth).
+  return '';
+}
+
+const API_BASE_URL = resolveApiBaseUrl(API_BASE_URL_RAW);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
