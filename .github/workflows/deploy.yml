@@ -89,7 +89,7 @@ jobs:
           # Kita arahkan ke file .env yang ada di home directory ubuntu
           docker run -d \
             --name be-app \
-            -p 8080:8080 \
+            -p 3000:8080 \
             --env-file /home/ubuntu/.env \
             ${{ secrets.DOCKER_USERNAME }}/be-reportsampah:latest
 
