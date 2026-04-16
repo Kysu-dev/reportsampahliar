@@ -110,7 +110,7 @@ func ConnectDatabase() {
 	dbPort := getEnvWithDefault("DB_PORT", "3306")
 	dbUser := getEnvWithDefault("DB_USER", "root")
 	dbPass := os.Getenv("DB_PASS") // Boleh kosong untuk setup lokal tertentu.
-	dbName := getEnvWithDefault("DB_NAME", "cleantrack")
+	dbName := getEnvWithDefault("DB_NAME", "reportsampah")
 
 	if strings.TrimSpace(dbPass) == "" {
 		fmt.Println("info: DB_PASS kosong, mencoba koneksi MySQL tanpa password (mode lokal)")

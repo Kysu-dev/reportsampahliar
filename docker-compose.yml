@@ -1,0 +1,46 @@
+services:
+  backend:
+    build: ./backend
+    container_name: cleantrack-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./backend/.env
+    environment:
+      # Defaults ini mencegah warning "variable is not set".
+      PORT: ${PORT:-8080}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8080}
+
+      # Sesuai variabel yang dipakai backend/config/db.go
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_USER: ${DB_USER:-root}
+      DB_PASS: ${DB_PASS:-}
+      DB_NAME: ${DB_NAME:-reportsampah}
+
+      # Sesuai variabel yang dipakai backend/utils/s3_helper.go
+      AWS_REGION: ${AWS_REGION:-ap-southeast-1}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
+
+    # Memudahkan backend container mengakses MySQL di host (jika DB lokal di mesin host).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # Simpan upload file tetap persist di host.
+    volumes:
+      - ./backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Untuk akses dari browser lokal saat docker-compose up
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+    container_name: cleantrack-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
